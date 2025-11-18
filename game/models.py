@@ -29,7 +29,7 @@ class CustomUser(AbstractUser):
 
 class GameHistory(models.Model):
     DIFFICULTY_CHOICES = [
-        ('basic', 'Básico'),
+        ('basic', 'Fácil'),
         ('medium', 'Medio'),
         ('advanced', 'Avanzado'),
     ]

@@ -2,19 +2,44 @@
 {% load static %}
 
 {% block content %}
+<header>
+    <div>
+        Memory Game
+    </div>
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+        <a href="{% url 'profile' %}" class="btn-secondary">
+            <span>📊 Ver Mi Perfil</span>
+        </a>
+        <a href="{% url 'logout' %}" class="btn-secondary">
+            <span>🚪 Cerrar Sesión</span>
+        </a>
+    </div>
+</header>
+
 <div class="difficulty-container">
     <!-- Header Section -->
-    <div class="header-section">
-        <h1>¡Elige tu Desafío!</h1>
-        <p>Selecciona el nivel de dificultad para tu entrenamiento Pokémon</p>
-    </div>
+    <section class="header-section" aria-labelledby="titulo-desafio">
+        <div class="text">
+            <div style="display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="title-badge" aria-hidden="true">🟣</div>
+                <h1 id="titulo-desafio">¡Elige tu Desafío!</h1>
+            </div>
+
+            <div class="pokebar" aria-hidden="true"></div>
+            </div>
+
+            <p>Selecciona el nivel de dificultad para tu entrenamiento Pokémon</p>
+        </div>
+    </section>
 
     <div class="main-content">
         <!-- Leaderboard Section -->
         <div class="leaderboard-section">
             <div class="leaderboard-header">
-                <h2>🏆 Leaderboard Global</h2>
-                <p>Top 10 entrenadores Pokémon</p>
+                <h2>🏆 Top Global</h2>
+                <p>Los 10 mejores entrenadores Pokémon</p>
             </div>
             
             <div class="leaderboard-list">
@@ -63,86 +88,96 @@
         </div>
 
         <!-- Difficulty Cards Section -->
-        <div class="difficulty-section">
+        
+        <div class="difficulty-section" aria-label="Selector de dificultad">
             <div class="difficulty-cards">
-                <div class="difficulty-card basic bounce" onclick="selectDifficulty('basic')">
-                    <div class="card-icon">🌱</div>
-                    <h3>Básico</h3>
+
+                <div class="difficulty-card basic" role="button" tabindex="0" aria-pressed="false" data-difficulty="basic">
+                    <div style="position:relative;">
+                        <!-- Badge opcional, borra si no la quieres -->
+                        <div class="badge" style="position:static;margin-bottom:8px;display:inline-block;font-size:11px;">Recomendado</div>
+                    </div>
+
+                    <div class="card-icon" aria-hidden="true">🌱</div>
+                    <h3>Fácil</h3>
+
                     <div class="difficulty-info">
                         <div class="info-item">
-                            <span class="icon">🎯</span>
-                            <span>6 Intentos</span>
+                        <span class="icon" aria-hidden="true">🎯</span>
+                        <span>6 Intentos</span>
                         </div>
                         <div class="info-item">
-                            <span class="icon">🧩</span>
-                            <span>Tablero 4x4</span>
+                        <span class="icon" aria-hidden="true">🧩</span>
+                        <span>Tablero 4x4</span>
                         </div>
                         <div class="info-item">
-                            <span class="icon">⭐</span>
-                            <span>Perfecto para empezar</span>
+                        <span class="icon" aria-hidden="true">⭐</span>
+                        <span>Perfecto para empezar</span>
                         </div>
                     </div>
-                    <div class="start-button">
+
+                    <div class="start-button" aria-hidden="true">
                         <span>¡Comenzar!</span>
                         <div class="sparkle"></div>
                     </div>
+
+                    <div class="muted-line">Tiempo máximo: <br> 3 minutos</div>
                 </div>
 
-                <div class="difficulty-card medium bounce" onclick="selectDifficulty('medium')">
-                    <div class="card-icon">🔥</div>
+                <div class="difficulty-card medium" role="button" tabindex="0" aria-pressed="false" data-difficulty="medium">
+                    <div class="card-icon" aria-hidden="true">🔥</div>
                     <h3>Medio</h3>
+
                     <div class="difficulty-info">
                         <div class="info-item">
-                            <span class="icon">🎯</span>
-                            <span>4 Intentos</span>
+                        <span class="icon" aria-hidden="true">🎯</span>
+                        <span>4 Intentos</span>
                         </div>
                         <div class="info-item">
-                            <span class="icon">🧩</span>
-                            <span>Tablero 4x4</span>
+                        <span class="icon" aria-hidden="true">🧩</span>
+                        <span>Tablero 4x4</span>
                         </div>
                         <div class="info-item">
-                            <span class="icon">⚡</span>
-                            <span>Desafío equilibrado</span>
+                        <span class="icon" aria-hidden="true">⚡</span>
+                        <span>Desafío equilibrado</span>
                         </div>
                     </div>
-                    <div class="start-button">
+
+                    <div class="start-button" aria-hidden="true">
+                        <span>¡Comenzar!</span>
+                        <div class="sparkle"></div>
+                    </div>
+
+                    <div class="muted-line">Tiempo máximo: <br> 2 minutos</div>
+                </div>
+
+                <div class="difficulty-card advanced" role="button" tabindex="0" aria-pressed="false" data-difficulty="advanced">
+                    <div class="card-icon" aria-hidden="true">🌋</div>
+                    <h3>Avanzado</h3>
+
+                    <div class="difficulty-info">
+                        <div class="info-item">
+                        <span class="icon" aria-hidden="true">🎯</span>
+                        <span>2 Intentos</span>
+                        </div>
+                        <div class="info-item">
+                        <span class="icon" aria-hidden="true">🧩</span>
+                        <span>Tablero 4x4</span>
+                        </div>
+                        <div class="info-item">
+                        <span class="icon" aria-hidden="true">🏆</span>
+                        <span>Para maestros Pokémon</span>
+                        </div>
+                    </div>
+
+                    <div class="start-button" aria-hidden="true">
                         <span>¡Aceptar Reto!</span>
                         <div class="sparkle"></div>
                     </div>
+
+                    <div class="muted-line">Tiempo máximo: <br> 1 minuto</div>
                 </div>
 
-                <div class="difficulty-card advanced bounce" onclick="selectDifficulty('advanced')">
-                    <div class="card-icon">🌋</div>
-                    <h3>Avanzado</h3>
-                    <div class="difficulty-info">
-                        <div class="info-item">
-                            <span class="icon">🎯</span>
-                            <span>2 Intentos</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="icon">🧩</span>
-                            <span>Tablero 4x4</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="icon">🏆</span>
-                            <span>Para maestros Pokémon</span>
-                        </div>
-                    </div>
-                    <div class="start-button">
-                        <span>¡Desafío Extremo!</span>
-                        <div class="sparkle"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation Buttons -->
-            <div class="navigation-buttons">
-                <a href="{% url 'profile' %}" class="btn-secondary">
-                    <span>📊 Ver Mi Perfil</span>
-                </a>
-                <a href="{% url 'logout' %}" class="btn-secondary">
-                    <span>🚪 Cerrar Sesión</span>
-                </a>
             </div>
         </div>
     </div>

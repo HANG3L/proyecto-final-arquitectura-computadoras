@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+
 <div class="profile-container">
     <!-- User Header -->
     <div class="user-header">
@@ -24,8 +25,8 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="stats-grid">
-        <div class="stat-card slide-in">
+    <div class="stats-grid" aria-live="polite">
+        <div class="stat-card">
             <div class="stat-icon">🎮</div>
             <div class="stat-info">
                 <span class="stat-number">{{ stats.total_games }}</span>
@@ -33,7 +34,7 @@
             </div>
         </div>
         
-        <div class="stat-card slide-in">
+        <div class="stat-card">
             <div class="stat-icon">✅</div>
             <div class="stat-info">
                 <span class="stat-number">{{ stats.total_wins }}</span>
@@ -41,7 +42,7 @@
             </div>
         </div>
         
-        <div class="stat-card slide-in">
+        <div class="stat-card">
             <div class="stat-icon">❌</div>
             <div class="stat-info">
                 <span class="stat-number">{{ stats.total_losses }}</span>
@@ -49,7 +50,7 @@
             </div>
         </div>
         
-        <div class="stat-card slide-in">
+        <div class="stat-card">
             <div class="stat-icon">⏱️</div>
             <div class="stat-info">
                 <span class="stat-number">{{ stats.average_time }}s</span>
@@ -57,7 +58,7 @@
             </div>
         </div>
         
-        <div class="stat-card slide-in">
+        <div class="stat-card">
             <div class="stat-icon">📊</div>
             <div class="stat-info">
                 <span class="stat-number">{{ stats.most_played_level }}</span>
@@ -65,7 +66,7 @@
             </div>
         </div>
         
-        <div class="stat-card slide-in">
+        <div class="stat-card">
             <div class="stat-icon">📈</div>
             <div class="stat-info">
                 <span class="stat-number">
