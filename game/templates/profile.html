@@ -62,7 +62,7 @@
         <div class="stat-card">
             <div class="stat-icon">📊</div>
             <div class="stat-info">
-                <span class="stat-number">{{ stats.most_played_level }}</span>
+                <span class="stat-number">{{ stats.most_common_difficulty }}</span>
                 <span class="stat-label">Nivel Favorito</span>
             </div>
         </div>
@@ -71,8 +71,8 @@
             <div class="stat-icon">📈</div>
             <div class="stat-info">
                 <span class="stat-number">
-                    {% if stats.total_games > 0 %}
-                        {{ stats.total_wins|floatformat:0 }}%
+                    {% if stats.average_wins > 0 %}
+                        {{ stats.average_wins|floatformat:0 }}%
                     {% else %}
                         0%
                     {% endif %}

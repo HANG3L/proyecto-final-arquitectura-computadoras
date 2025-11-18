@@ -4,6 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import CustomUser, GameHistory
+from collections import Counter
 import json
 import requests
 
@@ -194,7 +195,10 @@ def save_game_result(request):
 def profile_view(request):
     user = request.user
     # Solo mostrar las últimas 7 partidas
+    all_history = GameHistory.objects.filter(user=user)
     game_history = GameHistory.objects.filter(user=user).order_by('-created_at')[:7]
+
+    most_common_difficulty = Counter(h.difficulty for h in all_history).most_common(1)[0][0]
     
     # Calcular estadísticas
     total_games = user.total_games
@@ -210,6 +214,8 @@ def profile_view(request):
         'total_wins': total_wins,
         'total_losses': total_losses,
         'average_time': average_time,
+        'average_wins': (total_wins/total_games)*100,
+        'most_common_difficulty': most_common_difficulty,
         'total_trophies': user.trophies
     }
     
