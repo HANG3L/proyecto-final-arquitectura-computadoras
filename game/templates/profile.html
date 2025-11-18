@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load level_filters %}
 
 {% block content %}
 
@@ -10,7 +11,7 @@
             <div class="avatar-circle">
                 {{ user.username|first|upper }}
             </div>
-            <div class="level-badge">Lv. {{ stats.total_games|add:1 }}</div>
+            <div class="level-badge">Lv. {{ stats.total_games|calc_level }}</div>
         </div>
         
         <div class="user-info">
