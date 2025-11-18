@@ -198,7 +198,11 @@ def profile_view(request):
     all_history = GameHistory.objects.filter(user=user)
     game_history = GameHistory.objects.filter(user=user).order_by('-created_at')[:7]
 
-    most_common_difficulty = Counter(h.difficulty for h in all_history).most_common(1)[0][0]
+    most_common_difficulty = (
+        Counter(h.difficulty for h in all_history).most_common(1)[0][0]
+        if all_history else
+        'basic'
+    )
     
     # Calcular estadísticas
     total_games = user.total_games
@@ -214,7 +218,7 @@ def profile_view(request):
         'total_wins': total_wins,
         'total_losses': total_losses,
         'average_time': average_time,
-        'average_wins': (total_wins/total_games)*100,
+        'average_wins': (total_wins/total_games)*100 if total_games > 0 else 0,
         'most_common_difficulty': most_common_difficulty,
         'total_trophies': user.trophies
     }
