@@ -100,6 +100,7 @@ def game_view(request):
     difficulty = request.GET.get('difficulty', 'basic')
     return render(request, 'game.html', {'difficulty': difficulty})
 
+# game/views.py - Actualiza save_game_result
 @login_required
 def save_game_result(request):
     if request.method == 'POST':
@@ -119,9 +120,10 @@ def save_game_result(request):
             
             base_trophies = trophy_values.get(difficulty, 5)
             trophies_earned = 0
-            trophies_lost = 0
+            trophies_change = 0  # Para mostrar en historial
             
             user = request.user
+            current_trophies = user.trophies  # Guardar trofeos actuales
             
             if won:
                 # Calcular bonus por vidas restantes
@@ -145,12 +147,15 @@ def save_game_result(request):
                 
                 trophies_earned = int((base_trophies + time_bonus) * life_multiplier)
                 user.trophies += trophies_earned
+                trophies_change = trophies_earned  # Positivo para victorias
                 
             else:
-                # Perder trofeos
-                trophies_lost = base_trophies
-                user.trophies = max(0, user.trophies - trophies_lost)  # No permitir negativos
-                trophies_earned = -trophies_lost  # Para mostrar en historial
+                # Perder trofeos - NUNCA dejar en negativo
+                trophies_to_lose = base_trophies
+                actual_trophies_lost = min(trophies_to_lose, user.trophies)  # No quitar más de los que tiene
+                
+                user.trophies -= actual_trophies_lost
+                trophies_change = -actual_trophies_lost  # Negativo para derrotas
             
             # Actualizar estadísticas del usuario
             user.total_games += 1
@@ -170,17 +175,19 @@ def save_game_result(request):
                 won=won,
                 attempts_used=attempts_used,
                 time_taken=time_taken,
-                trophies_earned=trophies_earned
+                trophies_earned=trophies_change  # Guardar el cambio real (puede ser negativo)
             )
             
             return JsonResponse({
                 'success': True,
-                'trophies_earned': trophies_earned,
+                'trophies_earned': trophies_change,  # Cambio real (puede ser negativo)
                 'total_trophies': user.trophies,
-                'won': won
+                'won': won,
+                'previous_trophies': current_trophies  # Para mostrar en el mensaje
             })
             
         except Exception as e:
+            print(f"❌ Error guardando resultado: {str(e)}")
             return JsonResponse({'success': False, 'error': str(e)})
 
 @login_required

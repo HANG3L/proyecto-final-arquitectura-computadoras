@@ -16,6 +16,14 @@ class MemoryGame {
         this.initializeGame();
     }
     
+    // Método simplificado para reproducir sonidos
+    playSound(type) {
+        if (window.audioManager && window.audioManager.isEnabled()) {
+            window.audioManager.play(type);
+            console.log('🔊 Sonido:', type);
+        }
+    }
+
     getMaxAttempts() {
         const attempts = {
             'basic': 6,
@@ -171,6 +179,8 @@ class MemoryGame {
         }
         
         console.log(`🔄 Volteando carta: ${card.name}`);
+
+        this.playSound('flip');
         
         card.flipped = true;
         cardElement.classList.add('flipped');
@@ -191,6 +201,7 @@ class MemoryGame {
         
         if (card1.card.id === card2.card.id) {
             console.log('🎉 ¡Match encontrado!');
+            this.playSound('match');
             card1.card.matched = true;
             card2.card.matched = true;
             this.matchedPairs++;
@@ -207,6 +218,7 @@ class MemoryGame {
             }
         } else {
             console.log('💔 No hay match');
+            this.playSound('mismatch');
             this.attemptsLeft--;
             this.updateHearts();
             this.updateUI();
@@ -250,6 +262,13 @@ class MemoryGame {
         
         const won = reason === 'win';
         console.log(`🎯 Juego terminado: ${reason}, ganó: ${won}`);
+
+         // 🔊 SONIDO DE VICTORIA/DERROTA
+        if (won) {
+            this.playSound('win');
+        } else {
+            this.playSound('lose');
+        }
         
         this.showGameResult(reason, won);
         this.saveGameResult(won);
@@ -317,7 +336,12 @@ class MemoryGame {
             
             if (result.success) {
                 setTimeout(() => {
-                    this.showTrophyMessage(result.trophies_earned, result.total_trophies, won);
+                    this.showTrophyMessage(
+                        result.trophies_earned, 
+                        result.total_trophies, 
+                        result.won,
+                        result.previous_trophies
+                    );
                 }, 1500);
             }
         } catch (error) {
@@ -325,16 +349,27 @@ class MemoryGame {
         }
     }
     
-    showTrophyMessage(trophiesEarned, totalTrophies, won) {
-        const message = won ? 
-            `🏆 ¡Ganaste ${trophiesEarned} trofeos!<br>Total: ${totalTrophies} trofeos` :
-            `💔 Perdiste ${Math.abs(trophiesEarned)} trofeos<br>Total: ${totalTrophies} trofeos`;
+    showTrophyMessage(trophiesChange, totalTrophies, won, previousTrophies) {
+        let message, title;
+        
+        if (won) {
+            title = '🏆 ¡Victoria!';
+            message = `¡Ganaste ${trophiesChange} trofeos!<br>Total: ${totalTrophies} trofeos`;
+        } else {
+            if (trophiesChange < 0) {
+                title = '💔 Derrota';
+                message = `Perdiste ${Math.abs(trophiesChange)} trofeos<br>Total: ${totalTrophies} trofeos`;
+            } else {
+                title = '💔 Derrota';
+                message = `No perdiste trofeos (no tenías suficientes)<br>Total: ${totalTrophies} trofeos`;
+            }
+        }
         
         const trophyModal = document.createElement('div');
         trophyModal.className = 'custom-modal';
         trophyModal.innerHTML = `
             <div class="modal-content ${won ? 'success' : 'error'}">
-                <h3>${won ? '🏆 Trofeos Ganados' : '💔 Trofeos Perdidos'}</h3>
+                <h3>${title}</h3>
                 <p>${message}</p>
                 <button onclick="this.closest('.custom-modal').remove()">
                     Aceptar
@@ -356,10 +391,6 @@ class MemoryGame {
         
         if (timeElement) timeElement.textContent = this.formatTime(this.timeLeft);
         if (pairsElement) pairsElement.textContent = `${this.matchedPairs}/8`;
-    }
-    
-    playSound(type) {
-        console.log('🔊 Sonido:', type);
     }
 }
 
