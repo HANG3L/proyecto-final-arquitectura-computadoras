@@ -174,51 +174,166 @@ body {
     }
 }
 
-/* Game Board */
+/* Contenedor principal */
+.game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--bg);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Header */
+.game-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.game-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.info-card {
+    background-color: var(--white);
+    padding: 10px 15px;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
+}
+
+.info-label {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.info-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+/* Corazones */
+.hearts-container {
+    display: flex;
+    gap: 5px;
+}
+
+.heart {
+    font-size: 1.5rem;
+    transition: 0.3s;
+}
+
+.heart.inactive {
+    opacity: 0.3;
+}
+
+/* Controles */
+.game-controls a {
+    text-decoration: none;
+    color: var(--white);
+    background-color: var(--primary);
+    padding: 8px 16px;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    transition: 0.3s;
+}
+
+.game-controls a:hover {
+    background-color: var(--accent);
+    color: var(--muted);
+}
+
+/* Tablero */
 .game-board {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    max-width: 500px;
-    margin: 0 auto;
+    gap: 15px;
 }
 
+/* Grandes pantallas: 4x4 */
+@media (min-width: 769px) {
+    .game-board {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Móviles: 3x5 (aprox) */
+@media (max-width: 768px) {
+    .game-board {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Cartas */
 .card-game {
-    aspect-ratio: 3/4;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 10px;
-    cursor: pointer;
-    transform-style: preserve-3d;
-    transition: all 0.5s ease;
-    position: relative;
+    perspective: 1000px;
 }
 
-.card-game.flipped {
+.card-inner {
+    position: relative;
+    width: 100%;
+    padding-top: 120%; /* un poco alargadas */
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+
+.card-game.flipped .card-inner {
     transform: rotateY(180deg);
 }
 
-.card-game.matched {
-    animation: matched 0.6s ease;
+.card-front, .card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--card-radius);
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--white);
+    box-shadow: var(--card-shadow);
+    padding: 5px;
+    overflow: hidden;
 }
 
-@keyframes matched {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+.card-front img, .card-back img {
+    max-width: 70%;
+    max-height: 70%;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .game-board {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 5px;
+.card-back {
+    transform: rotateY(180deg);
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+/* Responsive ajuste de cartas para móviles */
+@media (max-width: 480px) {
+    .card-back p {
+        font-size: 0.7rem;
     }
-    
-    .difficulty-cards {
-        flex-direction: column;
+    .card-inner {
+        padding-top: 130%; /* aún más alargadas */
     }
 }
 
+
+/* LOADING */
 .loading-screen {
     position: fixed;
     top: 0;
@@ -270,7 +385,7 @@ body {
 
 
 /* Hearts System */
-.hearts-container {
+/* .hearts-container {
     display: flex;
     gap: 5px;
     justify-content: center;
@@ -295,7 +410,7 @@ body {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
-}
+} */
 
 /* Custom Modals */
 .custom-modal {
