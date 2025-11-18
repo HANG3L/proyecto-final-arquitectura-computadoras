@@ -238,6 +238,10 @@ body {
     opacity: 0.3;
 }
 
+.locked{
+    pointer-events: none;
+}
+
 /* Controles */
 .game-controls a {
     text-decoration: none;

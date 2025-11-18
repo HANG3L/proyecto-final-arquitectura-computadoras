@@ -108,7 +108,7 @@
                 </div>
                 
                 <div class="game-trophies">
-                    <span class="trophies-earned">+{{ game.trophies_earned }} 🏆</span>
+                    <span class="trophies-earned">{% if game.won %}+{% endif %}{{ game.trophies_earned }} 🏆</span>
                     <span class="game-date">{{ game.created_at|date:"d/m H:i" }}</span>
                 </div>
             </div>

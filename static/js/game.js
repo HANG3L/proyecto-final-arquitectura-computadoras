@@ -11,7 +11,7 @@ class MemoryGame {
         this.matchedPairs = 0;
         this.gameStarted = false;
         this.gameCompleted = false;
-        
+        this.timeToShow = this.getTimetoShow();
         console.log(`🎮 Iniciando juego en dificultad: ${difficulty}`);
         this.initializeGame();
     }
@@ -32,6 +32,15 @@ class MemoryGame {
         };
         return attempts[this.difficulty] || 6;
     }
+
+    getTimetoShow(){
+        const times = {
+            'basic': 10000,
+            'medium': 7000,
+            'advanced': 5000
+        };
+        return times[this.difficulty] || 3000;
+    }
     
     getMaxTime() {
         const times = {
@@ -40,6 +49,75 @@ class MemoryGame {
             'advanced': 60  // 1 minuto
         };
         return times[this.difficulty] || 60;
+    }
+
+    // Mostrar todas las cartas brevemente al inicio
+    showCardsPreview() {
+        setTimeout(() => {
+            this.cards.forEach((card, index) => {
+                setTimeout(() => {
+                    const cardElement = document.querySelector(`[data-id="${card.uniqueId}"]`);
+                    if (cardElement) {
+                        cardElement.classList.add('flipped');
+                        cardElement.classList.add('locked');
+                        this.playSound("flip");
+                        setTimeout(() => {
+                            if (!card.matched) {
+                                cardElement.classList.remove('flipped');
+                                cardElement.classList.remove('locked');
+                                this.playSound("flip");
+                            }
+                        }, this.timeToShow); // Mostrar por 5 segundos
+                    }
+                }, index * 100); // Efecto cascada
+            });
+        }, 500);
+    }
+
+    showStartModal() {
+        const timeText = this.formatTime(this.maxTime);
+        const pairsText = this.cards.length / 2;
+        const attemptsText = this.maxAttempts;
+        
+        const modal = document.createElement('div');
+        modal.className = 'custom-modal';
+        modal.id = 'startModal';
+        modal.innerHTML = `
+            <div class="modal-content success">
+                <h3>🎮 ¡Memoriza los Pokémon!</h3>
+                <p>Encontrarás <strong>${pairsText} pares</strong> de Pokémon</p>
+                <div class="game-rules">
+                    <div class="rule">⏱️ <strong>Tiempo:</strong> ${timeText}</div>
+                    <div class="rule">❤️ <strong>Vidas:</strong> ${attemptsText}</div>
+                    <div class="rule">🎯 <strong>Dificultad:</strong> ${this.difficulty}</div>
+                </div>
+                <p>Las cartas se mostrarán por ${this.timeToShow/1000} segundos cuando hagas click en "Comenzar"</p>
+                <button onclick="window.memoryGame.startGameWithPreview()" class="btn-start">
+                    ¡Comenzar Partida!
+                </button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    startGameWithPreview() {
+        // Remover modal de inicio
+        const startModal = document.getElementById('startModal');
+        if (startModal) {
+            startModal.remove();
+        }
+        
+        // Marcar que el usuario interactuó (permite sonidos)
+        this.userInteracted = true;
+        
+        // Iniciar el juego
+        this.gameStarted = true;
+        this.startTimer();
+        
+        // Mostrar preview de cartas con sonidos
+        this.showCardsPreview();
+        
+        console.log('⏱️ Juego iniciado, preview activado');
     }
     
     async initializeGame() {
@@ -52,6 +130,8 @@ class MemoryGame {
             this.setupGameBoard();
             this.updateHearts();
             this.updateUI();
+
+            this.showStartModal();
             console.log('✅ Juego inicializado correctamente');
         } catch (error) {
             console.error('❌ Error inicializando juego:', error);
@@ -111,14 +191,33 @@ class MemoryGame {
         
         heartsContainer.innerHTML = '';
         
-        for (let i = 0; i < this.maxAttempts; i++) {
+        // SIEMPRE mostrar 6 espacios de corazón para mantener diseño consistente
+        const totalHeartsToShow = 6;
+        
+        for (let i = 0; i < totalHeartsToShow; i++) {
             const heart = document.createElement('span');
-            heart.className = `heart ${i < this.attemptsLeft ? 'active' : 'inactive'}`;
-            heart.innerHTML = i < this.attemptsLeft ? '❤️' : '💔';
+            
+            if (i < this.attemptsLeft) {
+                // Corazón activo (vidas restantes)
+                heart.className = 'heart active';
+                heart.innerHTML = '❤️';
+                heart.title = `${this.attemptsLeft - i} vida(s) restante(s)`;
+            } else if (i < this.maxAttempts) {
+                // Corazón perdido (pero dentro del máximo de intentos)
+                heart.className = 'heart inactive';
+                heart.innerHTML = '💔';
+                heart.title = 'Vida perdida';
+            } else {
+                // Espacio vacío (para dificultades con menos de 6 intentos)
+                heart.className = 'heart empty';
+                heart.innerHTML = '🤍';
+                heart.title = 'No disponible en esta dificultad';
+            }
+            
             heartsContainer.appendChild(heart);
         }
         
-        console.log(`❤️ ${this.attemptsLeft}/${this.maxAttempts} corazones actualizados`);
+        console.log(`❤️ ${this.attemptsLeft}/${this.maxAttempts} corazones (mostrando 6 espacios)`);
     }
     
     setupGameBoard() {
@@ -139,7 +238,7 @@ class MemoryGame {
         
         this.cards.forEach((card, index) => {
             const cardElement = document.createElement('div');
-            cardElement.className = 'card-game';
+            cardElement.className = 'card-game locked';
             cardElement.dataset.id = card.uniqueId;
             
             const pokemonImage = card.image || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
