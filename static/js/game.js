@@ -246,7 +246,7 @@ class MemoryGame {
             cardElement.innerHTML = `
                 <div class="card-inner">
                     <div class="card-front">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="Pokeball">
+                        <img src="/static/images/reverse.jpg" alt="Card reverse">
                     </div>
                     <div class="card-back">
                         <img src="${pokemonImage}" alt="${card.name}" 
