@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- User Header -->
+    <div class="user-header">
+        <div class="user-avatar">
+            <div class="avatar-circle">
+                {{ user.username|first|upper }}
+            </div>
+            <div class="level-badge">Lv. {{ stats.total_games|add:1 }}</div>
+        </div>
+        
+        <div class="user-info">
+            <h1>{{ user.username }}</h1>
+            <p class="user-email">{{ user.email }}</p>
+            <div class="trophy-count">
+                <span class="trophy-icon">🏆</span>
+                <span class="trophy-number">{{ stats.total_trophies }}</span>
+                <span class="trophy-label">Trofeos</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card slide-in">
+            <div class="stat-icon">🎮</div>
+            <div class="stat-info">
+                <span class="stat-number">{{ stats.total_games }}</span>
+                <span class="stat-label">Partidas Jugadas</span>
+            </div>
+        </div>
+        
+        <div class="stat-card slide-in">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+                <span class="stat-number">{{ stats.total_wins }}</span>
+                <span class="stat-label">Victorias</span>
+            </div>
+        </div>
+        
+        <div class="stat-card slide-in">
+            <div class="stat-icon">❌</div>
+            <div class="stat-info">
+                <span class="stat-number">{{ stats.total_losses }}</span>
+                <span class="stat-label">Derrotas</span>
+            </div>
+        </div>
+        
+        <div class="stat-card slide-in">
+            <div class="stat-icon">⏱️</div>
+            <div class="stat-info">
+                <span class="stat-number">{{ stats.average_time }}s</span>
+                <span class="stat-label">Tiempo Promedio</span>
+            </div>
+        </div>
+        
+        <div class="stat-card slide-in">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+                <span class="stat-number">{{ stats.most_played_level }}</span>
+                <span class="stat-label">Nivel Favorito</span>
+            </div>
+        </div>
+        
+        <div class="stat-card slide-in">
+            <div class="stat-icon">📈</div>
+            <div class="stat-info">
+                <span class="stat-number">
+                    {% if stats.total_games > 0 %}
+                        {{ stats.total_wins|floatformat:0 }}%
+                    {% else %}
+                        0%
+                    {% endif %}
+                </span>
+                <span class="stat-label">Tasa de Victoria</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game History -->
+    <div class="history-section">
+        <h2>📜 Historial de Partidas</h2>
+        
+        {% if game_history %}
+        <div class="history-list">
+            {% for game in game_history %}
+            <div class="history-item {% if game.won %}won{% else %}lost{% endif %}">
+                <div class="game-result">
+                    <span class="result-icon">
+                        {% if game.won %}🎉{% else %}💔{% endif %}
+                    </span>
+                    <span class="result-text">
+                        {% if game.won %}Victoria{% else %}Derrota{% endif %}
+                    </span>
+                </div>
+                
+                <div class="game-details">
+                    <span class="difficulty-badge {{ game.difficulty }}">
+                        {{ game.difficulty|title }}
+                    </span>
+                    <span class="game-time">{{ game.time_taken|floatformat:1 }}s</span>
+                    <span class="game-attempts">{{ game.attempts_used }} intentos</span>
+                </div>
+                
+                <div class="game-trophies">
+                    <span class="trophies-earned">+{{ game.trophies_earned }} 🏆</span>
+                    <span class="game-date">{{ game.created_at|date:"d/m H:i" }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-history">
+            <div class="empty-icon">🎮</div>
+            <h3>No hay partidas jugadas</h3>
+            <p>¡Juega tu primera partida para ver estadísticas!</p>
+            <a href="{% url 'difficulty_selection' %}" class="btn-primary">
+                ¡Comenzar a Jugar!
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Navigation -->
+    <div class="profile-navigation">
+        <a href="{% url 'difficulty_selection' %}" class="btn-primary">
+            🎮 Seguir Jugando
+        </a>
+        <a href="{% url 'logout' %}" class="btn-secondary">
+            🚪 Cerrar Sesión
+        </a>
+    </div>
+</div>
+{% endblock %}

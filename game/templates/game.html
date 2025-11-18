@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="game-container">
+    <div class="game-header">
+        <div class="game-info">
+            <div class="info-card">
+                <span class="info-label">⏱️ Tiempo</span>
+                <span class="info-value" id="timeLeft">3:00</span>
+            </div>
+            <div class="info-card">
+                <span class="info-label">✅ Pares</span>
+                <span class="info-value" id="matchedPairs">0/8</span>
+            </div>
+        </div>
+        
+        <!-- Sistema de corazones -->
+        <div class="hearts-container" id="heartsContainer">
+            <!-- Los corazones se generan aquí -->
+        </div>
+        
+        <div class="game-controls">
+            <a href="{% url 'difficulty_selection' %}" class="link-arrow">
+                🏠 Menú
+            </a>
+        </div>
+    </div>
+
+    <div class="game-board" id="gameBoard">
+        <!-- Las cartas se generan aquí -->
+    </div>
+</div>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+    <div class="loading-content">
+        <div class="pokeball-loading"></div>
+        <h3>Cargando Pokémon...</h3>
+        <p>Preparando tu aventura</p>
+    </div>
+</div>
+
+<script src="{% static 'js/pokemon-api.js' %}"></script>
+<script src="{% static 'js/game.js' %}"></script>
+{% endblock %}

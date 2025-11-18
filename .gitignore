@@ -1,0 +1,76 @@
+# ========================================
+# Python general
+# ========================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entorno virtual
+venv/
+env/
+ENV/
+.venv/
+
+# Archivos de configuración local
+*.env
+*.ini
+*.cfg
+*.local
+
+# Archivos temporales
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+
+# ========================================
+# Django
+# ========================================
+# Archivos generados automáticamente
+*/migrations/*
+
+# Mantener __init__.py dentro de migrations
+!*/migrations/__init__.py
+
+# Base de datos SQLite (si se usa)
+db.sqlite3
+db.sqlite3-journal
+
+# Archivos estáticos y media generados
+staticfiles/
+media/
+
+# Archivos de cache y sesiones
+*.cache
+*.db
+*.sqlite3
+*.mo
+
+# ========================================
+# IDEs y editores
+# ========================================
+
+# VSCode
+.vscode/
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+
+# ========================================
+# Otros
+# ========================================
+# Distribuciones
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Configuración de Docker
+docker-compose.override.yml
+
+# macOS
+.DS_Store

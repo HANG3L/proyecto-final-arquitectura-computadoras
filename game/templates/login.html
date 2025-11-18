@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+</style>
+
+<div class="auth-container">
+    <div class="card login-card">
+        <div class="card-header text-center">
+            <img src="{% static 'images/waving-pikachu.gif' %}" alt="Pikachu" class="pokemon-animation">
+            <h1>¡Bienvenido Entrenador!</h1>
+            <p>Inicia sesión para comenzar tu aventura Pokémon</p>
+        </div>
+        
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="form-group mt-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="tu@email.com" aria-label="email" aria-describedby="basic-addon1"  id="email" name="email" required>
+                    <span class="input-group-text" id="basic-addon1">📧</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña Secreta</label>
+
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="Tu contraseña mágica..." aria-label="password" aria-describedby="basic-addon1"  id="password" name="password" required>
+                    <span class="input-group-text" id="basic-addon1">🔒</span>
+                </div>
+            </div>
+
+            {% if error %}
+            <div class="error-message shake text-danger mb-3">
+                ⚠️ {{ error }}
+            </div>
+            {% endif %}
+            
+            <div class="w-100 text-center">
+                <button type="submit" class="btn-primary pulse">
+                    <span>¡Iniciar Aventura!</span>
+                    <div class="btn-sparkles"></div>
+                </button>
+            </div>
+        </form>
+        
+        <div class="auth-footer text-center mt-3">
+            <p class="text-muted">¿Nuevo en el mundo Pokémon? <span><a href="{% url 'register' %}" class="link-arrow">
+                Regístrate aquí 
+                <span class="arrow">→</span>
+            </a></span></p>            
+        </div>
+    </div>
+</div>
+{% endblock %}

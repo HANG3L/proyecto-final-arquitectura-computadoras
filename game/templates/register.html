@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="card register-card">
+        <div class="card-header text-center">
+            <img src="{% static 'images/charmander-register.gif' %}" alt="Charmander" class="pokemon-animation">
+            <h1>¡Únete a la Aventura!</h1>
+            <p>Crea tu cuenta de entrenador Pokémon</p>
+        </div>
+        
+        <form method="POST" class="auth-form mt-3">
+            {% csrf_token %}            
+            
+            <div class="form-group mb-3">
+                <label for="username" class="form-label">Nombre de Entrenador</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Elije tu nombre de entrenador..." aria-label="username" aria-describedby="basic-addon1"  id="username" name="username" required>
+                    <span class="input-group-text" id="basic-addon1">👤</span>
+                </div>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">PokéEmail</label>
+
+                <div class="input-group">
+                    <input type="email" class="form-control" placeholder="Escribe tu nombre..." aria-label="email" aria-describedby="basic-addon1"  id="email" name="email" required>
+                    <span class="input-group-text" id="basic-addon1">📧</span>
+                </div>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">Contraseña Mágica</label>
+
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="Escribe tu nombre..." aria-label="password" aria-describedby="basic-addon1"  id="password" name="password" required>
+                    <span class="input-group-text" id="basic-addon1">✨</span>
+                </div>
+            </div>
+
+            {% if error %}
+            <div class="error-message shake text-danger mb-3">
+                ⚠️ {{ error }}
+            </div>
+            {% endif %}
+            
+            <div class="w-100 text-center mb-3">
+                <button type="submit" class="btn-primary pulse">
+                    <span>¡Crear Cuenta!</span>
+                    <div class="btn-sparkles"></div>
+                </button>
+            </div>
+        </form>
+        
+        <div class="auth-footer text-center">
+            <p class="text-muted">¿Ya tienes una cuenta? <span><a href="{% url 'login' %}" class="link-arrow">
+                Inicia sesión aquí 
+                <span class="arrow">→</span>
+            </a></span></p>            
+        </div>
+    </div>
+</div>
+{% endblock %}

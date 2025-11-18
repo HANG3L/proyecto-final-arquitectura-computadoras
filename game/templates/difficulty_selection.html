@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="difficulty-container">
+    <!-- Header Section -->
+    <div class="header-section">
+        <h1>¡Elige tu Desafío!</h1>
+        <p>Selecciona el nivel de dificultad para tu entrenamiento Pokémon</p>
+    </div>
+
+    <div class="main-content">
+        <!-- Leaderboard Section -->
+        <div class="leaderboard-section">
+            <div class="leaderboard-header">
+                <h2>🏆 Leaderboard Global</h2>
+                <p>Top 10 entrenadores Pokémon</p>
+            </div>
+            
+            <div class="leaderboard-list">
+                {% if leaderboard %}
+                    {% for player in leaderboard %}
+                    <div class="leaderboard-item {% if player.is_current_user %}current-user{% endif %} slide-in">
+                        <div class="player-position">
+                            {% if player.position == 1 %}
+                            <span class="medal gold">🥇</span>
+                            {% elif player.position == 2 %}
+                            <span class="medal silver">🥈</span>
+                            {% elif player.position == 3 %}
+                            <span class="medal bronze">🥉</span>
+                            {% else %}
+                            <span class="position">#{{ player.position }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="player-info">
+                            <span class="player-name {% if player.is_current_user %}highlight{% endif %}">
+                                {{ player.username }}
+                                {% if player.is_current_user %}
+                                <span class="you-badge">(Tú)</span>
+                                {% endif %}
+                            </span>
+                            <div class="player-stats">
+                                <span class="stat">{{ player.total_wins }}W</span>
+                                <span class="stat">{{ player.total_games }}G</span>
+                            </div>
+                        </div>
+                        
+                        <div class="player-trophies">
+                            <span class="trophy-count">{{ player.trophies }}</span>
+                            <span class="trophy-icon">🏆</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-leaderboard">
+                        <div class="empty-icon">🏆</div>
+                        <h3>No hay jugadores aún</h3>
+                        <p>¡Sé el primero en aparecer en el leaderboard!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Difficulty Cards Section -->
+        <div class="difficulty-section">
+            <div class="difficulty-cards">
+                <div class="difficulty-card basic bounce" onclick="selectDifficulty('basic')">
+                    <div class="card-icon">🌱</div>
+                    <h3>Básico</h3>
+                    <div class="difficulty-info">
+                        <div class="info-item">
+                            <span class="icon">🎯</span>
+                            <span>6 Intentos</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="icon">🧩</span>
+                            <span>Tablero 4x4</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="icon">⭐</span>
+                            <span>Perfecto para empezar</span>
+                        </div>
+                    </div>
+                    <div class="start-button">
+                        <span>¡Comenzar!</span>
+                        <div class="sparkle"></div>
+                    </div>
+                </div>
+
+                <div class="difficulty-card medium bounce" onclick="selectDifficulty('medium')">
+                    <div class="card-icon">🔥</div>
+                    <h3>Medio</h3>
+                    <div class="difficulty-info">
+                        <div class="info-item">
+                            <span class="icon">🎯</span>
+                            <span>4 Intentos</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="icon">🧩</span>
+                            <span>Tablero 4x4</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="icon">⚡</span>
+                            <span>Desafío equilibrado</span>
+                        </div>
+                    </div>
+                    <div class="start-button">
+                        <span>¡Aceptar Reto!</span>
+                        <div class="sparkle"></div>
+                    </div>
+                </div>
+
+                <div class="difficulty-card advanced bounce" onclick="selectDifficulty('advanced')">
+                    <div class="card-icon">🌋</div>
+                    <h3>Avanzado</h3>
+                    <div class="difficulty-info">
+                        <div class="info-item">
+                            <span class="icon">🎯</span>
+                            <span>2 Intentos</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="icon">🧩</span>
+                            <span>Tablero 4x4</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="icon">🏆</span>
+                            <span>Para maestros Pokémon</span>
+                        </div>
+                    </div>
+                    <div class="start-button">
+                        <span>¡Desafío Extremo!</span>
+                        <div class="sparkle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="navigation-buttons">
+                <a href="{% url 'profile' %}" class="btn-secondary">
+                    <span>📊 Ver Mi Perfil</span>
+                </a>
+                <a href="{% url 'logout' %}" class="btn-secondary">
+                    <span>🚪 Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectDifficulty(difficulty) {
+    // Add click animation
+    const card = event.currentTarget;
+    card.classList.add('clicked');
+    
+    setTimeout(() => {
+        window.location.href = `/game/?difficulty=${difficulty}`;
+    }, 300);
+}
+</script>
+{% endblock %}
